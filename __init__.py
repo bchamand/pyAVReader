@@ -1,1 +1,1 @@
-from ffmpeg import *
+from .ffmpeg import *
