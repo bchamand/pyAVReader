@@ -5,12 +5,21 @@ from typing import Dict, Optional, Sequence, Tuple, Union
 import torch
 from configparser import ConfigParser
 
+__all__ = [
+    "get_file_info",
+    "load",
+    "load_audio",
+    "load_video",
+    "dump",
+    "dump_audio",
+    "dump_video",
+]
+
+
 _config = ConfigParser()
 _config.read("config.ini")
 FFMPEG_BIN = _config["ffmpeg"]["ffmpeg"]
 FFPROBE_BIN = _config["ffmpeg"]["ffprobe"]
-
-__all__ = ""
 
 
 def _check_time_duration(time_duration: str) -> bool:
@@ -600,7 +609,6 @@ def load_audio(
             output=ffmpeg.stdout,
             stderr=ffmpeg.stderr,
         )
-
 
     # convert the buffer to tensor
     audio = torch.ShortTensor(torch.ShortStorage.from_buffer(ffmpeg.stdout, "native"))
