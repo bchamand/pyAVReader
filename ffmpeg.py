@@ -1,9 +1,10 @@
+import os
 import re
 import subprocess
+from configparser import ConfigParser
 from typing import Dict, Optional, Sequence, Tuple, Union
 
 import torch
-from configparser import ConfigParser
 
 __all__ = [
     "get_file_info",
@@ -17,7 +18,7 @@ __all__ = [
 
 
 _config = ConfigParser()
-_config.read("config.ini")
+_config.read(os.path.join(os.path.dirname(__file__), "config.ini"))
 FFMPEG_BIN = _config["ffmpeg"]["ffmpeg"]
 FFPROBE_BIN = _config["ffmpeg"]["ffprobe"]
 
