@@ -1,0 +1,67 @@
+name: Generate documentation
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sphinx sphinx_rtd_theme
+
+      - name: Config the local git repository
+        run: |
+          git config --local user.email "10047581+bchamand@users.noreply.github.com"
+          git config --local user.name "Benjamin Chamand"
+
+      - name: Generate the documentation
+        run: |
+          cd docs
+          make html
+          cd -
+
+      - name: Move the html files on gh-pages branches
+        run: |
+          mv docs/_build/html ${GITHUB_REF##*/}
+          git stash --include-untracked
+          git checkout gh-pages
+          rm -rf ${GITHUB_REF##*/}
+          git stash pop
+          git add ${GITHUB_REF##*/}
+
+      - name: Change the symlink of the stable release if necessary
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          rm stable
+          ln -s ${GITHUB_REF##*/} stable
+          git add stable
+
+      - name: Set the git status
+        id: git_status
+        run: echo "::set-output name=value::$(git diff-index --cached --quiet HEAD; echo $?)"
+
+      - name: Commit and push changes if necessary
+        if: steps.git_status.outputs.value != 0
+        run: |
+          git commit -m "${GITHUB_REF##*/}"
+          git push "https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git" gh-pages
