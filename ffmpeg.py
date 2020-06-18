@@ -504,6 +504,7 @@ def load_audio(
     sample_rate: Optional[float] = None,
     mono: bool = True,
     filters: Optional[str] = None,
+    data_format: str = "channels_first",
     dtype: torch.dtype = torch.float,
 ):
     r"""Return data and the sample rate from an audio file.
@@ -669,10 +670,10 @@ def dump_audio(
         print("error", err)
 
     # check the type of the tensor
-    if audio.dtype in {torch.bool, torch.int8}:
+    if video.dtype in {torch.bool, torch.int8}:
         raise TypeError(f"got inappropriate video format - video.dtype: {video.dtype}")
     # convert the tensor into bytes
-    if audio.is_floating_point():
+    if video.is_floating_point():
         video = video * 255
     video = video.to(torch.uint8)
     # check the values of the tensor
