@@ -424,6 +424,8 @@ def dump_video(
     frame_rate: int,
     frame_size: Union[int, Tuple[int, int], None] = None,
     filters: Optional[str] = None,
+    overwrite: bool = True,
+    codec: str = "libx264",
     data_format: str = "channels_first",
 ) -> None:
     """Write frames on the correct filepath
@@ -475,10 +477,10 @@ def dump_video(
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal -y"  # overwite output file if it exists
+        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"  # overwrite output file if it exists
         f" -f rawvideo -codec:v rawvideo -pix_fmt {'rgb24' if channels == 3 else 'gray'}"
         f" -s {width}x{height} -r {frame_rate} -i pipe:0"
-        f" -an -f mp4 -codec:v libx264 -pix_fmt yuv420p {filter_cmd} {fpath}"
+        f" -an -codec:v {codec} -pix_fmt yuv420p {filter_cmd} {fpath}"
     )
 
     # run the command and check if the execution did not generate an error
@@ -626,7 +628,8 @@ def load_audio(
     # change the type of the tensor
     audio = audio.to(dtype)
     if dtype.is_floating_point:
-        audio /= 32767.5  # (2^16-1)/2 rescale between -1 and 1
+        # rescale between -1 and 1
+        audio.add_(32768).div_((2 ** 16 - 1) / 2).add_(-1)
 
     return audio, sample_rate
 
@@ -636,75 +639,33 @@ def dump_audio(
     fpath: str,
     sample_rate: int,
     overwrite: bool = True,
+    codec: str = "pcm_s16le",
     data_format: str = "channels_first",
 ) -> None:
-    command = [
-        "ffmpeg",
-        "-loglevel",
-        "fatal",
-        "-y",  # (optional) overwrite output file if it exists
-        "-f",
-        "s16le",
-        "-acodec",
-        "pcm_s16le",
-        "-r",
-        "44100",  # the input will have 44100Hz
-        "-i",
-        "-",  # The imput comes from a pipe # means that the input will arrive from the pipe
-        "-vn",  # Tells FFMPEG not to expect any video, means "don't expect any video input"
-        "-f",
-        "mp4",
-        "-acodec",
-        "libfdk_aac",
-        "-b",
-        "3000k",  # output bitrate (=quality). Here, 3000kb/second
-        fpath,
-    ]
-
-    ffmpeg = subprocess.Popen(
-        command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    out, err = ffmpeg.communicate(audio.data.numpy().tobytes())
-
-    if err:
-        print("error", err)
-
     # check the type of the tensor
-    if video.dtype in {torch.bool, torch.int8}:
-        raise TypeError(f"got inappropriate video format - video.dtype: {video.dtype}")
+    if audio.dtype in {torch.bool, torch.uint8, torch.int8}:
+        raise TypeError(f"got inappropriate audio format - audio.dtype: {audio.dtype}")
     # convert the tensor into bytes
-    if video.is_floating_point():
-        video = video * 255
-    video = video.to(torch.uint8)
+    if audio.is_floating_point():
+        audio = (audio + 1) * ((2 ** 16 - 1) / 2) - 32768
+
+    audio = audio.to(torch.uint8)
     # check the values of the tensor
-    if video.max() > 255 and video.min() < 0:
+    if video.max() > 32767 and video.min() < -32768:
         raise ValueError()
 
     # convert video to channels_last if needed (required for FFmpeg)
     if data_format == "channels_first":
-        video = video.permute(0, 2, 3, 1)
-    # extract the dimensions of the video tensor
-    seq_len, height, width, channels = video.shape
+        audio.transpose_(0, 1)
 
-    # create the output filter command
-    filter_opt = []
-    # rescale the output if requested
-    if frame_size is not None:
-        expected_width, expected_height = (
-            (frame_size, -1) if isinstance(frame_size, int) else frame_size
-        )
-        filter_opt.append(f"scale={expected_width}:{expected_height}")
-    # add other user-defined FFmpeg filters
-    if filters is not None:
-        filter_opt.append(filters.split(","))
     # create the filter command
-    filter_cmd = "-filter:v {}".format(",".join(filter_opt)) if filter_opt else ""
+    filter_cmd = f"-filter:a {filters}" if filters is not None else ""
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal -y"  # overwite output file if it exists
+        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"  # overwrite output file if it exists
         f" -f s16le -codec:a pcm_s16le -r {sample_rate} -i pipe:0"
-        f" -vn -f mp4 -codec:a libfdk_aac {filter_cmd} {fpath}"
+        f" -an -codec:a {codec} {filter_cmd} {fpath}"
     )
 
     # run the command and check if the execution did not generate an error
