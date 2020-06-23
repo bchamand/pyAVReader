@@ -639,6 +639,7 @@ def dump_audio(
     fpath: str,
     sample_rate: int,
     overwrite: bool = True,
+    filters: Optional[str] = None,
     codec: str = "pcm_s16le",
     data_format: str = "channels_first",
 ) -> None:
@@ -649,9 +650,9 @@ def dump_audio(
     if audio.is_floating_point():
         audio = (audio + 1) * ((2 ** 16 - 1) / 2) - 32768
 
-    audio = audio.to(torch.uint8)
+    audio = audio.to(torch.int16)
     # check the values of the tensor
-    if video.max() > 32767 and video.min() < -32768:
+    if audio.max() > 32767 and audio.min() < -32768:
         raise ValueError()
 
     # convert video to channels_last if needed (required for FFmpeg)
@@ -665,13 +666,13 @@ def dump_audio(
     command = (
         f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"  # overwrite output file if it exists
         f" -f s16le -codec:a pcm_s16le -r {sample_rate} -i pipe:0"
-        f" -an -codec:a {codec} {filter_cmd} {fpath}"
+        f" -vn -codec:a {codec} {filter_cmd} {fpath}"
     )
 
     # run the command and check if the execution did not generate an error
     ffmpeg = subprocess.run(
         command.split(),
-        input=video.data.numpy().tobytes(),
+        input=audio.data.numpy().tobytes(),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
