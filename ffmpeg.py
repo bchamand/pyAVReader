@@ -304,11 +304,10 @@ def load_video(
     grayscale : bool, optional (default=False)
         Converting video to grayscale.
     filters : str, optional (default=None)
-        ffmpeg filter command
-
+        Add a FFmpeg filtergraph, see https://ffmpeg.org/ffmpeg-filters.html.
     data_format : str, optional (default="channels_first")
-        The ordering of the dimensions in the outputs. If "channels_last",
-        data_format corresponds to output with shape
+        The ordering of the dimensions of the output tensor `video`.
+        If "channels_last", data_format corresponds to output with shape
         (seq_len, height, width, channels) while "channels_first" corresponds
         to inputs with shape (seq_len, channels, height, width).
     dtype : torch.dtype, optional (default=torch.float)
@@ -419,8 +418,8 @@ def load_video(
 
 
 def dump_video(
-    video: torch.Tensor,
     fpath: str,
+    video: torch.Tensor,
     frame_rate: int,
     frame_size: Union[int, Tuple[int, int], None] = None,
     filters: Optional[str] = None,
@@ -428,21 +427,45 @@ def dump_video(
     codec: str = "libx264",
     data_format: str = "channels_first",
 ) -> None:
-    """Write frames on the correct filepath
+    """Write a torch tensor as a MP4 file.
 
     Parameters
     ----------
-    frames : torch.Tensor
-        [description]
     fpath : str
-        [description]
+        Path to the output file.
+    video : torch.Tensor
+        A torch tensor containing the video data
+    frame_rate : int
+        The video input frame rate (in frames/sec).
+    frame_size : Union[int, Tuple[int, int], None], optional (default=None)
+        Target frame size (width, height). If None, frame_size is the native
+        frame size given by the size of the input tensor `video`. The value can
+        be an `int` giving the height of the frame, the height will be
+        automatically calculated by respecting the aspect ratio. With the same
+        effect, it is possible to define only one component, either height or
+        width, and set the other component to -1.
+    filters : Optional[str], optional (default=None)
+        Add a FFmpeg filtergraph, see https://ffmpeg.org/ffmpeg-filters.html.
+    overwrite : bool, optional (default=True)
+        Overwrite output file if it exists.
+    codec : str, optional (default="libx264")
+        Video codec to be used to encode the data, see the FFmpeg documentation
+        (https://ffmpeg.org/ffmpeg-codecs.html) for the list of compatible
+        codecs.
+    data_format : str, optional (default="channels_first")
+        The ordering of the dimensions of the input tensor `video`.
+        If "channels_last", data_format corresponds to output with shape
+        (seq_len, height, width, channels) while "channels_first" corresponds
+        to inputs with shape (seq_len, channels, height, width).
 
     Raises
     ------
     TypeError
-        Inappropriate video format.
+        [description]
+    ValueError
+        [description]
     subprocess.CalledProcessError
-        If the FFmpeg command fail.
+        [description]
     """
     # check the type of the tensor
     if video.dtype in {torch.bool, torch.int8}:
@@ -477,7 +500,7 @@ def dump_video(
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"  # overwrite output file if it exists
+        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"
         f" -f rawvideo -codec:v rawvideo -pix_fmt {'rgb24' if channels == 3 else 'gray'}"
         f" -s {width}x{height} -r {frame_rate} -i pipe:0"
         f" -an -codec:v {codec} -pix_fmt yuv420p {filter_cmd} {fpath}"
@@ -527,11 +550,13 @@ def load_audio(
         Target sampling rate. If None, sample_rate is the native sampling rate.
     mono : bool, optional (default=True)
         Converting signal to mono.
+    filters : Optional[str], optional (default=None)
+        Add a FFmpeg filtergraph, see https://ffmpeg.org/ffmpeg-filters.html.
     data_format : str, optional (default="channels_first")
-        The ordering of the dimensions in the outputs. If "channels_last",
-        data_format corresponds to inputs with shape (batch, steps, channels)
-        while "channels_first" corresponds to inputs with shape
-        (batch, channels, steps).
+        The ordering of the dimensions of the output `audio`.
+        If "channels_last", data_format corresponds to output tensor with shape
+        (seq_len, channels) while "channels_first" corresponds to output tensor
+        with shape (channels, seq_len).
     dtype : torch.dtype, optional (default=torch.float)
         Desired output data-type for the tensor, e.g, torch.int16.
 
@@ -540,7 +565,7 @@ def load_audio(
     audio: torch.Tensor
         Data read from audio file.
     sample_rate: int
-        Sample rate of audio file.
+        Sample rate (in samples/sec) of audio file.
 
     Raises
     ------
@@ -635,14 +660,48 @@ def load_audio(
 
 
 def dump_audio(
-    audio: torch.Tensor,
     fpath: str,
+    audio: torch.Tensor,
     sample_rate: int,
+    mono: bool = True,
     filters: Optional[str] = None,
     overwrite: bool = True,
     codec: str = "pcm_s16le",
     data_format: str = "channels_first",
 ) -> None:
+    """Write a torch tensor as a WAV file.
+
+    Parameters
+    ----------
+    fpath : str
+        Path to the output file.
+    audio : torch.Tensor
+        A torch tensor containing the audio data.
+    sample_rate : int
+        The audio input sample rate (in samples/sec).
+    filters : Optional[str], optional (default=None)
+        Add a FFmpeg filtergraph, see https://ffmpeg.org/ffmpeg-filters.html.
+    overwrite : bool, optional (default=True)
+        Overwrite output file if it exists.
+    codec : str, optional (default="pcm_s16le")
+        Audio codec to be used to encode the data, see the FFmpeg documentation
+        (https://ffmpeg.org/ffmpeg-codecs.html) for the list of compatible
+        codecs.
+    data_format : str, optional (default="channels_first")
+        The ordering of the dimensions of the input `audio`.
+        If "channels_last", data_format corresponds to input tensor with shape
+        (seq_len, channels) while "channels_first" corresponds to input tensor
+        with shape (channels, seq_len).
+
+    Raises
+    ------
+    TypeError
+        [description]
+    ValueError
+        [description]
+    subprocess.CalledProcessError
+        [description]
+    """
     # check the type of the tensor
     if audio.dtype in {torch.bool, torch.uint8, torch.int8}:
         raise TypeError(f"got inappropriate audio format - audio.dtype: {audio.dtype}")
@@ -655,18 +714,21 @@ def dump_audio(
     if audio.max() > 32767 and audio.min() < -32768:
         raise ValueError()
 
-    # convert video to channels_last if needed (required for FFmpeg)
+    # convert audio to channels_last if needed (required for FFmpeg)
     if data_format == "channels_first":
         audio.transpose_(0, 1)
+
+    # pre-process some options of the FFmpeg command
+    mono_cmd = "-ac 1" if mono else ""  # convert to mono
 
     # create the filter command
     filter_cmd = f"-filter:a {filters}" if filters is not None else ""
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"  # overwrite output file if it exists
+        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"
         f" -f s16le -codec:a pcm_s16le -r {sample_rate} -i pipe:0"
-        f" -vn -codec:a {codec} {filter_cmd} {fpath}"
+        f" -vn -codec:a {codec} {mono_cmd} {filter_cmd} {fpath}"
     )
 
     # run the command and check if the execution did not generate an error
