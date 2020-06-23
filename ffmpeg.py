@@ -638,8 +638,8 @@ def dump_audio(
     audio: torch.Tensor,
     fpath: str,
     sample_rate: int,
-    overwrite: bool = True,
     filters: Optional[str] = None,
+    overwrite: bool = True,
     codec: str = "pcm_s16le",
     data_format: str = "channels_first",
 ) -> None:
