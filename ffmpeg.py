@@ -11,9 +11,9 @@ __all__ = [
     "load",
     "load_audio",
     "load_video",
-    "dump",
-    "dump_audio",
-    "dump_video",
+    "write",
+    "write_audio",
+    "write_video",
 ]
 
 
@@ -417,7 +417,7 @@ def load_video(
     return video, frame_rate
 
 
-def dump_video(
+def write_video(
     fpath: str,
     video: torch.Tensor,
     frame_rate: int,
@@ -659,7 +659,7 @@ def load_audio(
     return audio, sample_rate
 
 
-def dump_audio(
+def write_audio(
     fpath: str,
     audio: torch.Tensor,
     sample_rate: int,
@@ -820,10 +820,10 @@ def load(
     return (video, frame_rate), (audio, sample_rate)
 
 
-def dump(
+def write(
     audio_data: Optional[torch.Tensor], video_data: Optional[torch.Tensor], fpath: str
 ) -> None:
     if video_data is not None:
-        dump_video()
+        write_video()
     if audio_data is not None:
         pass
