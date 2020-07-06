@@ -1,4 +1,4 @@
-name: docs
+name: Docs
 
 on:
   push:
@@ -18,6 +18,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          ref: ${{github.ref}}
+
+      - name: Config the local git repository
+        run: |
+          git config --local user.email "10047581+bchamand@users.noreply.github.com"
+          git config --local user.name "Benjamin Chamand"
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -25,41 +31,70 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install sphinx sphinx_rtd_theme
+          pip install .[docs]
+          # [ -f docs/requirements.txt ] && pip install -r docs/requirements.txt || pip install sphinx sphinx-rtd-theme
 
-      - name: Config the local git repository
+      - name: Set environment variable
         run: |
-          git config --local user.email "10047581+bchamand@users.noreply.github.com"
-          git config --local user.name "Benjamin Chamand"
+          echo ::set-env name=PROJECT_VERSION::$(echo ${GITHUB_REF##*/} | awk '{sub(/^master$/, "latest"); print}')
+          echo ::set-env name=GH_PAGES_BRANCH::$([ $(git ls-remote --quiet --heads origin gh-pages | wc -l) -ne 0 ] && echo 'gh-pages')
+
+      - name: Initialize the gh-pages branch
+        if: ${{!env.GH_PAGES_BRANCH}}
+        run: |
+          echo ::set-env name=GH_PAGES_BRANCH::gh-pages
+          git checkout --orphan gh-pages
+          git rm -rf .
+          touch .nojekyll
+          echo "latest" > all_versions.txt
+          echo '<!DOCTYPE html>' > index.html
+          echo '<html>' >> index.html
+          echo '  <head>' >> index.html
+          echo '    <meta charset="utf-8">' >> index.html
+          echo '    <title>Redirecting to latest</title>' >> index.html
+          echo '    <meta http-equiv="refresh" content="0; URL=latest/index.html">' >> index.html
+          echo '    <link rel="canonical" href="latest/index.html">' >> index.html
+          echo '  </head>' >> index.html
+          echo '</html>' >> index.html
+          git add .nojekyll all_versions.txt index.html
+          git commit -m "Initial gh-pages commit"
+          git push "https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git" $GH_PAGES_BRANCH
+          git checkout ${GITHUB_REF##*/}
 
       - name: Generate the documentation
         run: |
           cd docs
           make html
-          cd -
+          cd ..
 
       - name: Move the html files on gh-pages branches
         run: |
-          mv docs/_build/html ${GITHUB_REF##*/}
-          git stash --include-untracked
-          git checkout gh-pages
-          rm -rf ${GITHUB_REF##*/}
-          git stash pop
-          git add ${GITHUB_REF##*/}
+          git clean -df
+          git checkout $GH_PAGES_BRANCH
+          rm -rf $PROJECT_VERSION
+          mv docs/_build/html $PROJECT_VERSION
+          git add $PROJECT_VERSION
 
       - name: Change the symlink of the stable release if necessary
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          rm stable
-          ln -s ${GITHUB_REF##*/} stable
+          rm -f stable
+          ln -s $PROJECT_VERSION stable
           git add stable
+
+      - name: Update the all_versions.txt file
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          awk -v version=$PROJECT_VERSION 'NR==1 {print; print version}; NR!=1' all_versions.txt > ${{runner.temp}}/tmp.txt
+          mv ${{runner.temp}}/tmp.txt all_versions.txt
+          git add all_versions.txt
 
       - name: Set the git status
         id: git_status
-        run: echo "::set-output name=value::$(git diff-index --cached --quiet HEAD; echo $?)"
+        run: echo ::set-output name=value::$(git diff-index --cached --quiet HEAD; echo $?)
 
-      - name: Commit and push changes if necessary
+      - name: Commit and push changes
         if: steps.git_status.outputs.value != 0
         run: |
-          git commit -m "${GITHUB_REF##*/}"
-          git push "https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git" gh-pages
+          git commit -m "$PROJECT_VERSION doc build"
+          git push "https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git" $GH_PAGES_BRANCH
