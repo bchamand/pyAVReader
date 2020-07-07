@@ -3,8 +3,8 @@ from typing import Dict, Optional, Tuple, Union
 
 import torch
 
-from .conf import FFMPEG_BIN
-from .utils import _get_frame_size, _hhmmss2sec, get_file_info
+import ffmpeg.path
+from ffmpeg.utils import _get_frame_size, _hhmmss2sec, get_file_info
 
 
 def load_audio(
@@ -106,7 +106,7 @@ def load_audio(
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal"
+        f"{ffmpeg.path.FFMPEG_BIN} -loglevel fatal"
         f" {offset_cmd} {duration_cmd} -i {fpath}"
         f" -vn -f s16le -codec:a pcm_s16le {mono_cmd} {filter_cmd} pipe:1"
     )
@@ -256,7 +256,7 @@ def load_video(
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal"
+        f"{ffmpeg.path.FFMPEG_BIN} -loglevel fatal"
         f" {offset_cmd} {duration_cmd} -i {fpath}"
         f" -an -f image2pipe -codec:v rawvideo -pix_fmt {'gray' if grayscale else 'rgb24'}"
         f" {filter_cmd} pipe:1"

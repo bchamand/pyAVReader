@@ -3,7 +3,7 @@ from typing import Optional, Tuple, Union
 
 import torch
 
-from .conf import FFMPEG_BIN
+import ffmpeg.path
 
 
 def write_audio(
@@ -73,7 +73,7 @@ def write_audio(
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"
+        f"{ffmpeg.path.FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"
         f" -f s16le -codec:a pcm_s16le -r {sample_rate} -i pipe:0"
         f" -vn -codec:a {codec} {mono_cmd} {filter_cmd} {fpath}"
     )
@@ -177,7 +177,7 @@ def write_video(
 
     # create the ffmpeg command
     command = (
-        f"{FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"
+        f"{ffmpeg.path.FFMPEG_BIN} -loglevel fatal {'-y' if overwrite else ''}"
         f" -f rawvideo -codec:v rawvideo -pix_fmt {'rgb24' if channels == 3 else 'gray'}"
         f" -s {width}x{height} -r {frame_rate} -i pipe:0"
         f" -an -codec:v {codec} -pix_fmt yuv420p {filter_cmd} {fpath}"

@@ -2,7 +2,7 @@ import re
 import subprocess
 from typing import Dict, Optional, Sequence, Tuple, Union
 
-from .conf import FFPROBE_BIN
+import ffmpeg.path
 
 
 def _check_time_duration(time_duration: str) -> bool:
@@ -148,7 +148,7 @@ def get_file_info(
 
     # create the ffprobe command
     command = (
-        f"{FFPROBE_BIN} -loglevel fatal"
+        f"{ffmpeg.path.FFPROBE_BIN} -loglevel fatal"
         " -print_format compact=print_section=0 -show_entries"
         " stream=codec_type,duration,sample_rate,r_frame_rate,channels,width,height"
         f" {fpath}"
