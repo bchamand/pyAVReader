@@ -12,28 +12,30 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../"))
 
-import ffmpeg
+import avreader
 
 
 # -- Project information -----------------------------------------------------
 
-project = "pyFFmpeg"
+project = "pyAVReader"
 author = "Benjamin Chamand"
-version = ffmpeg.__version__
-release = ffmpeg.__version__
-copyright = f"{datetime.datetime.now().year}, {author}"
+version = avreader.__version__
+release = avreader.__version__
+copyright = f"{datetime.datetime.now().year}, {author}."
 
 
 # -- Github Project information ----------------------------------------------
 
 github_user = "bchamand"
-github_repo = "pyffmpeg"
+github_repo = "avreader"
+
 
 def subprocess_cmd(cmd):
     res = subprocess.run(
         cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True
     )
     return res.stdout.strip().decode("utf-8")
+
 
 github_version = version
 try:
@@ -56,15 +58,18 @@ except:
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    # "sphinx.ext.viewcode",
     "sphinx.ext.mathjax",
-    # "sphinx.ext.autosummary",
+    "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
-    # "sphinx.ext.linkcode",
+    "sphinx.ext.linkcode",
+    # "sphinx.ext.intersphinx",
     "recommonmark",
 ]
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+add_module_names = True
+source_suffix = {".rst": "restructuredtext"}
+master_doc = "index"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -84,7 +89,7 @@ html_context = {
 
 html_theme_options = {
     "display_version": True,
-    "collapse_navigation": True,
+    "collapse_navigation": False,
 }
 
 
@@ -92,6 +97,9 @@ html_theme_options = {
 
 # autodoc settings
 autodoc_typehints = "description"
+
+autosummary_generate = True
+autodoc_member_order = "alphabetical"
 
 # napoleon settings
 napoleon_numpy_docstring = True
@@ -106,19 +114,19 @@ def linkcode_resolve(domain, info):
         for part in info["fullname"].split("."):
             obj = getattr(obj, part)
         fn = inspect.getsourcefile(obj)
-        fn = os.path.relpath(fn, start=os.path.dirname(ffmpeg.__file__))
+        fn = os.path.relpath(fn, start=os.path.dirname(avreader.__file__))
         source, lineno = inspect.getsourcelines(obj)
         return fn, lineno, lineno + len(source) - 1
 
     if domain != "py" or not info["module"]:
         return None
     try:
-        filename = "%s#L%d-L%d".format(find_source())
+        filename = "{}#L{:d}-L{:d}".format(*find_source())
     except Exception:
         filename = info["module"].replace(".", "/") + ".py"
 
     branch = "master" if "dev" in version else f"v{version}"
     github_url = (
-        f"https://github.com/{github_user}/{github_repo}/blob/{version}/{filename}"
+        f"https://github.com/{github_user}/{github_repo}/blob/{branch}/{filename}"
     )
     return github_url

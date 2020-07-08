@@ -5,7 +5,7 @@ from typing import Optional, Sequence, Tuple, Union
 import pytest
 import torch
 
-import ffmpeg.utils
+import avreader.utils
 
 
 dataset = [
@@ -43,7 +43,7 @@ def test_check_time_duration(
             key: expected[index]
             for index, key in enumerate(("sign", "hours", "minutes", "seconds"))
         }
-    assert ffmpeg.utils._check_time_duration(time_duration) == expected
+    assert avreader.utils._check_time_duration(time_duration) == expected
 
 
 @pytest.mark.parametrize(
@@ -51,7 +51,7 @@ def test_check_time_duration(
 )
 def test_check_time_duration_exception(time_duration, expected):
     with pytest.raises(expected):
-        ffmpeg.utils._check_time_duration(time_duration)
+        avreader.utils._check_time_duration(time_duration)
 
 
 @pytest.mark.parametrize(
@@ -64,7 +64,7 @@ def test_check_time_duration_exception(time_duration, expected):
     ],
 )
 def test_hhmmss2sec(hhmmss, expected):
-    assert ffmpeg.utils._hhmmss2sec(hhmmss) == expected
+    assert avreader.utils._hhmmss2sec(hhmmss) == expected
 
 
 @pytest.mark.parametrize(
@@ -72,7 +72,7 @@ def test_hhmmss2sec(hhmmss, expected):
 )
 def test_hhmmss2sec_exception( hhmmss, expected):
     with pytest.raises(expected):
-        ffmpeg.utils._hhmmss2sec("-180.45")
+        avreader.utils._hhmmss2sec("-180.45")
 
 
 @pytest.mark.parametrize(
@@ -81,9 +81,9 @@ def test_hhmmss2sec_exception( hhmmss, expected):
     ids=[data["url"].rpartition("/")[2] for data in dataset],
 )
 def test_get_file_info(url, audio_info, video_info):
-    assert ffmpeg.utils.get_file_info(url, stream="audio") == audio_info
-    assert ffmpeg.utils.get_file_info(url, stream="video") == video_info
-    assert ffmpeg.utils.get_file_info(url, stream="audio+video") == {
+    assert avreader.utils.get_file_info(url, stream="audio") == audio_info
+    assert avreader.utils.get_file_info(url, stream="video") == video_info
+    assert avreader.utils.get_file_info(url, stream="audio+video") == {
         "audio": audio_info,
         "video": video_info,
     }
@@ -98,7 +98,7 @@ def test_get_file_info(url, audio_info, video_info):
 )
 def test_get_file_info_exception(url, stream, expected):
     with pytest.raises(expected):
-        assert ffmpeg.utils.get_file_info(url, stream=stream)
+        assert avreader.utils.get_file_info(url, stream=stream)
 
 
 @pytest.mark.parametrize(
@@ -106,4 +106,4 @@ def test_get_file_info_exception(url, stream, expected):
     [((480, 360), None, (480, 360)), ((1920, 1080), 720, (1280, 720))],
 )
 def test_get_frame_size(original, final, expected):
-    assert ffmpeg.utils._get_frame_size(original, final) == expected
+    assert avreader.utils._get_frame_size(original, final) == expected

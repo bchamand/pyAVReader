@@ -86,11 +86,13 @@ async function onLoad() {
 
     // change the display name of the version (in case we need to display
     // "stable" or "latest" instead the number version)
-    let version = currentVersion
-    if (listVersions && (listVersions.indexOf(currentVersion) === 1)) {
-        version = "stable"
+    //let version = currentVersion
+    if (currentVersion) {
+        if (listVersions && (listVersions.indexOf(currentVersion) === 1)) {
+            currentVersion = 'stable'
+        }
+        document.getElementsByClassName('version')[0].innerHTML = currentVersion;
     }
-    document.getElementsByClassName('version')[0].innerHTML = version;
 
     // generate the version selection bar
     if (listVersions) {
@@ -100,4 +102,4 @@ async function onLoad() {
     }
 }
 
-window.addEventListener("load", onLoad)
+window.addEventListener('load', onLoad)

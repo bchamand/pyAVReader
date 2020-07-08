@@ -2,7 +2,7 @@ import re
 import subprocess
 from typing import Dict, Optional, Sequence, Tuple, Union
 
-import ffmpeg.path
+import avreader.path
 
 
 def _check_time_duration(time_duration: str) -> bool:
@@ -62,7 +62,7 @@ def _check_time_duration(time_duration: str) -> bool:
 def _hhmmss2sec(time_duration: str) -> float:
     r"""Convert time duration from the form [-][[HH:]MM:]SS[.m] to [-]S[.m].
 
-    Convert a string time duration in the form of a float time duration in seconds!!!!!
+    Convert a string time duration in the form of a float time duration in seconds.
 
     Parameters
     ----------
@@ -116,7 +116,8 @@ def get_file_info(
     Returns
     -------
     file_info : dict
-        Extracted information from the audiovisual file structured as follows:
+        Extracted information from the audiovisual file structured as follows::
+
             {
                 'audio': {
                     'duration': float,
@@ -130,6 +131,7 @@ def get_file_info(
                     'frame_rate': float,
                 },
             }
+
         If the stream parameter is different from 'audio+video', the
         sub-dictionary of the corresponding stream is returned.
 
@@ -148,7 +150,7 @@ def get_file_info(
 
     # create the ffprobe command
     command = (
-        f"{ffmpeg.path.FFPROBE_BIN} -loglevel fatal"
+        f"{avreader.path.FFPROBE_BIN} -loglevel fatal"
         " -print_format compact=print_section=0 -show_entries"
         " stream=codec_type,duration,sample_rate,r_frame_rate,channels,width,height"
         f" {fpath}"

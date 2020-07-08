@@ -5,7 +5,7 @@ from typing import Optional, Sequence, Tuple, Union
 import pytest
 import torch
 
-import ffmpeg
+import avreader
 
 
 @pytest.mark.parametrize(
@@ -58,7 +58,7 @@ def test_dump_video(
     fpath = tmp_path / "video.mp4"
 
     # save video
-    ffmpeg.dump_video(
+    avreader.dump_video(
         video,
         fpath,
         frame_rate,
@@ -71,7 +71,7 @@ def test_dump_video(
         seq_len, channels, height, width = video.shape
     else:
         seq_len, height, width, channels = video.shape
-    video_info = ffmpeg.get_file_info(fpath, stream="video")
+    video_info = avreader.get_file_info(fpath, stream="video")
 
     assert frame_rate == video_info["frame_rate"]
     assert seq_len == (video_info["duration"] // video_info["frame_rate"])

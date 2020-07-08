@@ -1,9 +1,9 @@
-pyFFmpeg
-========
+pyAVReader
+==========
 
-pyFFmpeg is a python module to load audio and video.
+pyAVReader is a python module to load audio and video.
 
-For a quick introduction, please refer to the :doc:`tutorial`.
+For a quick introduction, please refer to the :doc:`notes/tutorial`.
 
 ..
    include:: ../README.md
@@ -11,7 +11,7 @@ For a quick introduction, please refer to the :doc:`tutorial`.
 
 .. toctree::
    :glob:
-   :maxdepth: 1
+   :titlesonly:
    :caption: Getting Started
 
    notes/install
@@ -19,11 +19,11 @@ For a quick introduction, please refer to the :doc:`tutorial`.
 
 
 .. toctree::
-   :glob:
-   :maxdepth: 1
+   :titlesonly:
    :caption: Package Reference
 
-   modules/ffmpeg
+   modules/load
+   modules/write
    modules/utils
 
 

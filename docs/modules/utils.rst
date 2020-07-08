@@ -1,9 +1,17 @@
-ffmpeg.utils
-============
+avreader.utils
+==============
 
-.. contents:: Contents
-    :local:
+.. currentmodule:: avreader.utils
 
+Contents
+--------
 
-.. automodule:: ffmpeg.utils
+.. autosummary::
+
+    get_file_info
+
+Functions
+---------
+
+.. automodule:: avreader.utils
     :members: get_file_info

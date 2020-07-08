@@ -1,5 +1,5 @@
-ffmpeg
-======
+avreader
+=======
 
 .. contents:: Contents
     :local:
@@ -8,12 +8,12 @@ ffmpeg
 Load Media File
 ---------------
 
-.. automodule:: ffmpeg.load
+.. automodule:: avreader.load
     :members: load, load_audio, load_video
 
 
 Write Media File
 ----------------
 
-.. automodule:: ffmpeg.write
+.. automodule:: avreader.write
     :members: write, write_audio, write_video
