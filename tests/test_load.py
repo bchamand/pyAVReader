@@ -5,7 +5,7 @@ from typing import Optional, Sequence, Tuple, Union
 import pytest
 import torch
 
-import ffmpeg.load
+import avreader.load
 
 
 dataset = [
@@ -103,7 +103,7 @@ def test_load_video(
     video_info,
 ):
     # load video
-    frames, final_frame_rate = ffmpeg.load_video(
+    frames, final_frame_rate = avreader.load_video(
         fpath,
         offset=offset,
         duration=duration,
@@ -192,7 +192,7 @@ def test_load_audio(
     audio_info,
 ):
     # load video
-    audio, final_sample_rate = ffmpeg.load_audio(
+    audio, final_sample_rate = avreader.load_audio(
         fpath,
         offset=offset,
         duration=duration,
