@@ -1,29 +1,24 @@
-pyAVReader
-==========
+AVReader Documentation
+======================
 
 pyAVReader is a python module to load audio and video.
 
 For a quick introduction, please refer to the :doc:`notes/tutorial`.
 
-..
-   include:: ../README.md
-
 
 .. toctree::
-   :glob:
-   :titlesonly:
    :caption: Getting Started
+   :titlesonly:
 
    notes/install
    notes/tutorial
 
 
 .. toctree::
-   :titlesonly:
    :caption: Package Reference
+   :maxdepth: 1
 
-   modules/load
-   modules/write
+   modules/avreader
    modules/utils
 
 
