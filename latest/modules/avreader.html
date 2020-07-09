@@ -220,8 +220,6 @@ data_format corresponds to inputs with shape (batch, steps, channels)
 while “channels_first” corresponds to inputs with shape
 (batch, channels, steps).</p></li>
 <li><p><strong>dtype</strong> (<em>torch.dtype</em><em>, </em><em>optional</em><em> (</em><em>default=torch.float</em><em>)</em>) – Desired output data-type for the tensor, e.g, torch.int16.</p></li>
-<li><p><strong>akwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – </p></li>
-<li><p><strong>vkwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -230,9 +228,6 @@ while “channels_first” corresponds to inputs with shape
 <li><p><strong>audio</strong> (<em>Tuple[torch.Tensor, int]</em>) – [description]</p></li>
 </ul>
 </p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[Tuple[torch.Tensor, int], Tuple[torch.Tensor, int]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,9 +317,6 @@ representing the selected number of frames of the video.</p></li>
 <li><p><strong>subprocess.CalledProcessError</strong> – If the FFmpeg command fail.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>torch.Tensor</p>
-</dd>
 </dl>
 </dd></dl>
 
@@ -352,19 +344,7 @@ representing the selected number of frames of the video.</p></li>
 <dl class="py function">
 <dt id="avreader.write">
 <code class="sig-prename descclassname">avreader.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">audio_data</span></em>, <em class="sig-param"><span class="n">video_data</span></em>, <em class="sig-param"><span class="n">fpath</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bchamand/pyAVReader/blob/master/avreader/write.py#L202-L208"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avreader.write" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>audio_data</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em>) – </p></li>
-<li><p><strong>video_data</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em>) – </p></li>
-<li><p><strong>fpath</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt id="avreader.write_audio">
@@ -385,7 +365,6 @@ codecs.</p></li>
 If “channels_last”, data_format corresponds to input tensor with shape
 (seq_len, channels) while “channels_first” corresponds to input tensor
 with shape (channels, seq_len).</p></li>
-<li><p><strong>mono</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -394,9 +373,6 @@ with shape (channels, seq_len).</p></li>
 <li><p><strong>ValueError</strong> – [description]</p></li>
 <li><p><strong>subprocess.CalledProcessError</strong> – [description]</p></li>
 </ul>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -435,9 +411,6 @@ to inputs with shape (seq_len, channels, height, width).</p></li>
 <li><p><strong>subprocess.CalledProcessError</strong> – [description]</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
 </dl>
 </dd></dl>
 
@@ -468,7 +441,7 @@ to inputs with shape (seq_len, channels, height, width).</p></li>
         &copy; Copyright 2020, Benjamin Chamand.
       <span class="commit">
         
-        Revision <code>a02bc9c</code>.
+        Revision <code>229824b</code>.
       </span>
 
     </p>
