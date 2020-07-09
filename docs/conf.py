@@ -93,7 +93,7 @@ html_theme_options = {
 # -- Extension configuration -------------------------------------------------
 
 # autodoc settings
-autodoc_typehints = "description"
+autodoc_typehints = "none"
 
 autosummary_generate = True
 autodoc_member_order = "alphabetical"
