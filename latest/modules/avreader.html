@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>avreader &mdash; pyAVReader 0.1.0-dev0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/js/sphinx_rtd_versions.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="avreader.utils" href="utils.html" />
+    <link rel="prev" title="Tutorial" href="../notes/tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> pyAVReader
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0-dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/install.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/tutorial.html">Tutorial</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">avreader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#avreader-load">avreader.load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#avreader-write">avreader.write</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">avreader.utils</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyAVReader</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>avreader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/bchamand/pyavreader/blob/master/docs/modules/avreader.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="avreader">
+<h1>avreader<a class="headerlink" href="#avreader" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#avreader-load" id="id1">avreader.load</a></p></li>
+<li><p><a class="reference internal" href="#avreader-write" id="id2">avreader.write</a></p></li>
+</ul>
+</div>
+<div class="section" id="avreader-load">
+<h2><a class="toc-backref" href="#id1">avreader.load</a><a class="headerlink" href="#avreader-load" title="Permalink to this headline">¶</a></h2>
+<p>Load audio, video or both.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#avreader.load" title="avreader.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(fpath[, offset, duration, akwargs, vkwargs])</p></td>
+<td><p>Return audiovisual data, frame rate and sample rate.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#avreader.load_audio" title="avreader.load_audio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_audio</span></code></a>(fpath[, offset, duration, …])</p></td>
+<td><p>Return data and the sample rate from an audio file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#avreader.load_video" title="avreader.load_video"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_video</span></code></a>(fpath[, offset, duration, …])</p></td>
+<td><p>Return data and the frame rate from a video file.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt id="avreader.load">
+<code class="sig-prename descclassname">avreader.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">duration</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">akwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vkwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bchamand/pyavreader/blob/master/load.py#L297-L347"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avreader.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return audiovisual data, frame rate and sample rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fpath</strong> (<em>str</em>) – Path to the input file.</p></li>
+<li><p><strong>offset</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=0.0</em><em>)</em>) – Start reading after this time. Offset must be a time duration
+specification, see
+<a class="reference external" href="https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax">https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax</a>.</p></li>
+<li><p><strong>duration</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Only load up to this much audio. Duration must be a time duration
+specification, see
+<a class="reference external" href="https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax">https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax</a>.</p></li>
+<li><p><strong>frame_rate</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – [description]</p></li>
+<li><p><strong>frame_size</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – [description]</p></li>
+<li><p><strong>grayscale</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – Converting video to grayscale.</p></li>
+<li><p><strong>sample_rate</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Target sampling rate. If None, sample_rate is the native sampling rate.</p></li>
+<li><p><strong>mono</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – Converting signal to mono.</p></li>
+<li><p><strong>data_format</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=&quot;channels_first&quot;</em><em>)</em>) – The ordering of the dimensions in the outputs. If “channels_last”,
+data_format corresponds to inputs with shape (batch, steps, channels)
+while “channels_first” corresponds to inputs with shape
+(batch, channels, steps).</p></li>
+<li><p><strong>dtype</strong> (<em>torch.dtype</em><em>, </em><em>optional</em><em> (</em><em>default=torch.float</em><em>)</em>) – Desired output data-type for the tensor, e.g, torch.int16.</p></li>
+<li><p><strong>akwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – </p></li>
+<li><p><strong>vkwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>video</strong> (<em>Tuple[torch.Tensor, int]</em>) – [description]</p></li>
+<li><p><strong>audio</strong> (<em>Tuple[torch.Tensor, int]</em>) – [description]</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[Tuple[torch.Tensor, int], Tuple[torch.Tensor, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="avreader.load_audio">
+<code class="sig-prename descclassname">avreader.</code><code class="sig-name descname">load_audio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">duration</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sample_rate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mono</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">filters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">data_format</span><span class="o">=</span><span class="default_value">'channels_first'</span></em>, <em class="sig-param"><span class="n">dtype</span><span class="o">=</span><span class="default_value">torch.float32</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bchamand/pyavreader/blob/master/load.py#L10-L144"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avreader.load_audio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return data and the sample rate from an audio file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fpath</strong> (<em>str</em>) – Path to the input file.</p></li>
+<li><p><strong>offset</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=0.0</em><em>)</em>) – Start reading after this time. Offset must be a time duration
+specification, see
+<a class="reference external" href="https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax">https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax</a>.</p></li>
+<li><p><strong>duration</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Only load up to this much audio. Duration must be a time duration
+specification, see
+<a class="reference external" href="https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax">https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax</a>.</p></li>
+<li><p><strong>sample_rate</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Target sampling rate. If None, sample_rate is the native sampling rate.</p></li>
+<li><p><strong>mono</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – Converting signal to mono.</p></li>
+<li><p><strong>filters</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Add a FFmpeg filtergraph, see <a class="reference external" href="https://ffmpeg.org/ffmpeg-filters.html">https://ffmpeg.org/ffmpeg-filters.html</a>.</p></li>
+<li><p><strong>data_format</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=&quot;channels_first&quot;</em><em>)</em>) – The ordering of the dimensions of the output <cite>audio</cite>.
+If “channels_last”, data_format corresponds to output tensor with shape
+(seq_len, channels) while “channels_first” corresponds to output tensor
+with shape (channels, seq_len).</p></li>
+<li><p><strong>dtype</strong> (<em>torch.dtype</em><em>, </em><em>optional</em><em> (</em><em>default=torch.float</em><em>)</em>) – Desired output data-type for the tensor, e.g, torch.int16.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>audio</strong> (<em>torch.Tensor</em>) – Data read from audio file.</p></li>
+<li><p><strong>sample_rate</strong> (<em>int</em>) – Sample rate (in samples/sec) of audio file.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – [description]</p></li>
+<li><p><strong>subprocess.CalledProcessError</strong> – [description]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="avreader.load_video">
+<code class="sig-prename descclassname">avreader.</code><code class="sig-name descname">load_video</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">duration</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">frame_rate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">frame_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">grayscale</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">filters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">data_format</span><span class="o">=</span><span class="default_value">'channels_first'</span></em>, <em class="sig-param"><span class="n">dtype</span><span class="o">=</span><span class="default_value">torch.float32</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bchamand/pyavreader/blob/master/load.py#L147-L294"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avreader.load_video" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return data and the frame rate from a video file.</p>
+<p>Return a torch.Tensor (C, H, W) in the range [0.0, 1.0] if the dtype is a
+floating point. In the other cases, tensors are returned without scaling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fpath</strong> (<em>str</em>) – Path to the input file.</p></li>
+<li><p><strong>offset</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=0.0</em><em>)</em>) – Start reading after this tile. Offset must be a time duration
+specification, see <a class="reference external" href="https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax">https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax</a>.</p></li>
+<li><p><strong>duration</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Only load up to this much audio. Duration must be a time duration
+specification, see <a class="reference external" href="https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax">https://www.ffmpeg.org/ffmpeg-utils.html#time-duration-syntax</a>.</p></li>
+<li><p><strong>frame_rate</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Target frame rate. If None, frame_rate is the native frame rate.</p></li>
+<li><p><strong>frame_size</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Target frame size (width, height). If None, frame_size is the native
+frame size. The value can be an <cite>int</cite> giving the height of the frame,
+the height will be automatically calculated by respecting the aspect
+ratio. With the same effect, it is possible to define only one
+component, either height or width, and set the other component to -1.</p></li>
+<li><p><strong>grayscale</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – Converting video to grayscale.</p></li>
+<li><p><strong>filters</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Add a FFmpeg filtergraph, see <a class="reference external" href="https://ffmpeg.org/ffmpeg-filters.html">https://ffmpeg.org/ffmpeg-filters.html</a>.</p></li>
+<li><p><strong>data_format</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=&quot;channels_first&quot;</em><em>)</em>) – The ordering of the dimensions of the output tensor <cite>video</cite>.
+If “channels_last”, data_format corresponds to output with shape
+(seq_len, height, width, channels) while “channels_first” corresponds
+to inputs with shape (seq_len, channels, height, width).</p></li>
+<li><p><strong>dtype</strong> (<em>torch.dtype</em><em>, </em><em>optional</em><em> (</em><em>default=torch.float</em><em>)</em>) – Desired output data-type for the tensor, e.g, torch.int16.
+Can be all torch types except torch.bool and torch.int8.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>video</strong> (<em>torch.Tensor</em>) – Tensor of the form (seq_len, channels, height, width) with seq_len
+representing the selected number of frames of the video.</p></li>
+<li><p><strong>frame_rate</strong> (<em>int</em>) – The frame rate corresponding to the video.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – [description]</p></li>
+<li><p><strong>ValueError</strong> – [description]</p></li>
+<li><p><strong>subprocess.CalledProcessError</strong> – If the FFmpeg command fail.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="avreader-write">
+<h2><a class="toc-backref" href="#id2">avreader.write</a><a class="headerlink" href="#avreader-write" title="Permalink to this headline">¶</a></h2>
+<p>Write audio, video or both.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#avreader.write" title="avreader.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(audio_data, video_data, fpath)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#avreader.write_audio" title="avreader.write_audio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_audio</span></code></a>(fpath, audio, sample_rate[, …])</p></td>
+<td><p>Write a torch tensor as a WAV file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#avreader.write_video" title="avreader.write_video"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_video</span></code></a>(fpath, video, frame_rate[, …])</p></td>
+<td><p>Write a torch tensor as a MP4 file.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt id="avreader.write">
+<code class="sig-prename descclassname">avreader.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">audio_data</span></em>, <em class="sig-param"><span class="n">video_data</span></em>, <em class="sig-param"><span class="n">fpath</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bchamand/pyavreader/blob/master/write.py#L202-L208"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avreader.write" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>audio_data</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em>) – </p></li>
+<li><p><strong>video_data</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em>) – </p></li>
+<li><p><strong>fpath</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="avreader.write_audio">
+<code class="sig-prename descclassname">avreader.</code><code class="sig-name descname">write_audio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em>, <em class="sig-param"><span class="n">audio</span></em>, <em class="sig-param"><span class="n">sample_rate</span></em>, <em class="sig-param"><span class="n">mono</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">filters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">codec</span><span class="o">=</span><span class="default_value">'pcm_s16le'</span></em>, <em class="sig-param"><span class="n">data_format</span><span class="o">=</span><span class="default_value">'channels_first'</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bchamand/pyavreader/blob/master/write.py#L9-L94"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avreader.write_audio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a torch tensor as a WAV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fpath</strong> (<em>str</em>) – Path to the output file.</p></li>
+<li><p><strong>audio</strong> (<em>torch.Tensor</em>) – A torch tensor containing the audio data.</p></li>
+<li><p><strong>sample_rate</strong> (<em>int</em>) – The audio input sample rate (in samples/sec).</p></li>
+<li><p><strong>filters</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Add a FFmpeg filtergraph, see <a class="reference external" href="https://ffmpeg.org/ffmpeg-filters.html">https://ffmpeg.org/ffmpeg-filters.html</a>.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – Overwrite output file if it exists.</p></li>
+<li><p><strong>codec</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=&quot;pcm_s16le&quot;</em><em>)</em>) – Audio codec to be used to encode the data, see the FFmpeg documentation
+(<a class="reference external" href="https://ffmpeg.org/ffmpeg-codecs.html">https://ffmpeg.org/ffmpeg-codecs.html</a>) for the list of compatible
+codecs.</p></li>
+<li><p><strong>data_format</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=&quot;channels_first&quot;</em><em>)</em>) – The ordering of the dimensions of the input <cite>audio</cite>.
+If “channels_last”, data_format corresponds to input tensor with shape
+(seq_len, channels) while “channels_first” corresponds to input tensor
+with shape (channels, seq_len).</p></li>
+<li><p><strong>mono</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – [description]</p></li>
+<li><p><strong>ValueError</strong> – [description]</p></li>
+<li><p><strong>subprocess.CalledProcessError</strong> – [description]</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="avreader.write_video">
+<code class="sig-prename descclassname">avreader.</code><code class="sig-name descname">write_video</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fpath</span></em>, <em class="sig-param"><span class="n">video</span></em>, <em class="sig-param"><span class="n">frame_rate</span></em>, <em class="sig-param"><span class="n">frame_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">codec</span><span class="o">=</span><span class="default_value">'libx264'</span></em>, <em class="sig-param"><span class="n">data_format</span><span class="o">=</span><span class="default_value">'channels_first'</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/bchamand/pyavreader/blob/master/write.py#L97-L199"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#avreader.write_video" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a torch tensor as a MP4 file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fpath</strong> (<em>str</em>) – Path to the output file.</p></li>
+<li><p><strong>video</strong> (<em>torch.Tensor</em>) – A torch tensor containing the video data</p></li>
+<li><p><strong>frame_rate</strong> (<em>int</em>) – The video input frame rate (in frames/sec).</p></li>
+<li><p><strong>frame_size</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Target frame size (width, height). If None, frame_size is the native
+frame size given by the size of the input tensor <cite>video</cite>. The value can
+be an <cite>int</cite> giving the height of the frame, the height will be
+automatically calculated by respecting the aspect ratio. With the same
+effect, it is possible to define only one component, either height or
+width, and set the other component to -1.</p></li>
+<li><p><strong>filters</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Add a FFmpeg filtergraph, see <a class="reference external" href="https://ffmpeg.org/ffmpeg-filters.html">https://ffmpeg.org/ffmpeg-filters.html</a>.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – Overwrite output file if it exists.</p></li>
+<li><p><strong>codec</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=&quot;libx264&quot;</em><em>)</em>) – Video codec to be used to encode the data, see the FFmpeg documentation
+(<a class="reference external" href="https://ffmpeg.org/ffmpeg-codecs.html">https://ffmpeg.org/ffmpeg-codecs.html</a>) for the list of compatible
+codecs.</p></li>
+<li><p><strong>data_format</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default=&quot;channels_first&quot;</em><em>)</em>) – The ordering of the dimensions of the input tensor <cite>video</cite>.
+If “channels_last”, data_format corresponds to output with shape
+(seq_len, height, width, channels) while “channels_first” corresponds
+to inputs with shape (seq_len, channels, height, width).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – [description]</p></li>
+<li><p><strong>ValueError</strong> – [description]</p></li>
+<li><p><strong>subprocess.CalledProcessError</strong> – [description]</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utils.html" class="btn btn-neutral float-right" title="avreader.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../notes/tutorial.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Chamand.
+      <span class="commit">
+        
+        Revision <code>392e755</code>.
+      </span>
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
