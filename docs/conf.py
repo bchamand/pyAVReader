@@ -119,7 +119,7 @@ def linkcode_resolve(domain, info):
     if domain != "py" or not info["module"]:
         return None
     try:
-        filename = "{}#L{:d}-L{:d}".format(*find_source())
+        filename = "avreader/{}#L{:d}-L{:d}".format(*find_source())
     except Exception:
         filename = info["module"].replace(".", "/") + ".py"
 
