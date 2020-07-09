@@ -29,13 +29,11 @@ copyright = f"{datetime.datetime.now().year}, {author}."
 github_user = "bchamand"
 github_repo = project.lower()
 
-
 def subprocess_cmd(cmd):
     res = subprocess.run(
         cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True
     )
     return res.stdout.strip().decode("utf-8")
-
 
 github_version = version
 try:
@@ -63,7 +61,6 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.linkcode",
     # "sphinx.ext.intersphinx",
-    "recommonmark",
 ]
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
