@@ -27,7 +27,7 @@ copyright = f"{datetime.datetime.now().year}, {author}."
 # -- Github Project information ----------------------------------------------
 
 github_user = "bchamand"
-github_repo = project.lower()
+github_repo = project
 github_version = version
 git_revision = ""
 
