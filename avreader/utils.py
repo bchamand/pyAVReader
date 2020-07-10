@@ -116,7 +116,8 @@ def get_file_info(
     Returns
     -------
     file_info : dict
-        Extracted information from the audiovisual file structured as follows::
+        Extracted information from the audiovisual file structured as follows:
+        ::
 
             {
                 'audio': {
