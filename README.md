@@ -1,4 +1,4 @@
-Audio Visual Reader
+# Audio Visual Reader
 
 ![](https://github.com/bchamand/pyAVReader/workflows/build/badge.svg)
 [![](https://github.com/bchamand/pyAVReader/workflows/docs/badge.svg)](https://bchamand.github.io/pyAVReader)
