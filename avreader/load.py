@@ -2,26 +2,27 @@ import subprocess
 from typing import Dict, Optional, Tuple, Union
 
 import torch
+from torch import Tensor
 
 import avreader.path
 from avreader.utils import _get_frame_size, _hhmmss2sec, get_file_info
 
 
 def load_audio(
-    fpath: str,
+    file: Union[bytes, str],
     offset: Union[float, str] = 0.0,
     duration: Union[float, str, None] = None,
-    sample_rate: Optional[float] = None,
+    sample_rate: Optional[int] = None,
     mono: bool = True,
     filters: Optional[str] = None,
     data_format: str = "channels_first",
     dtype: torch.dtype = torch.float,
-):
+) -> Tuple[Tensor, int]:
     r"""Return data and the sample rate from an audio file.
 
     Parameters
     ----------
-    fpath : str
+    file : Union[bytes, str]
         Path to the input file.
     offset : Union[float, str], optional (default=0.0)
         Start reading after this time. Offset must be a time duration
@@ -61,7 +62,7 @@ def load_audio(
     """
     # retrieve information about the video (duration, sample rate,
     # number of channels)
-    info = get_file_info(fpath, "audio")
+    info = get_file_info(file, "audio")
 
     # check the parameters
     offset = _hhmmss2sec(offset) if isinstance(offset, str) else offset
@@ -79,7 +80,7 @@ def load_audio(
 
     # check the data format
     if not mono and data_format not in {"channels_last", "channels_first"}:
-        raise ValueError("Unknow data_format:", data_format)
+        raise ValueError(f"Unknow data_format: {data_format}")
 
     if dtype in {torch.bool, torch.uint8, torch.int8}:
         raise TypeError(f"Got inappropriate dtype arg: {dtype}")
@@ -105,15 +106,19 @@ def load_audio(
     filter_cmd = "-filter:a {}".format(",".join(filter_opt)) if filter_opt else ""
 
     # create the ffmpeg command
+    input_url = file if isinstance(file, str) else "pipe:0"
     command = (
         f"{avreader.path.FFMPEG_BIN} -loglevel fatal"
-        f" {offset_cmd} {duration_cmd} -i {fpath}"
+        f" {offset_cmd} {duration_cmd} -i {input_url}"
         f" -vn -f s16le -codec:a pcm_s16le {mono_cmd} {filter_cmd} pipe:1"
     )
 
     # run the command and check if the execution did not generate an error
     ffmpeg = subprocess.run(
-        command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        command.split(),
+        input=None if isinstance(file, str) else file,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     if ffmpeg.returncode != 0:
         raise subprocess.CalledProcessError(
@@ -145,16 +150,16 @@ def load_audio(
 
 
 def load_video(
-    fpath: str,
+    file: Union[bytes, str],
     offset: Union[float, str] = 0.0,
     duration: Union[float, str, None] = None,
-    frame_rate: Optional[float] = None,
+    frame_rate: Optional[int] = None,
     frame_size: Union[int, Tuple[int, int], None] = None,
     grayscale: bool = False,
     filters: Optional[str] = None,
     data_format: str = "channels_first",
     dtype: torch.dtype = torch.float,
-) -> torch.Tensor:
+) -> Tuple[Tensor, int]:
     r"""Return data and the frame rate from a video file.
 
     Return a torch.Tensor (C, H, W) in the range [0.0, 1.0] if the dtype is a
@@ -162,7 +167,7 @@ def load_video(
 
     Parameters
     ----------
-    fpath : str
+    file : Union[bytes, str]
         Path to the input file.
     offset : Union[float, str], optional (default=0.0)
         Start reading after this tile. Offset must be a time duration
@@ -209,7 +214,7 @@ def load_video(
         If the FFmpeg command fail.
     """
     # retrieve information about the video (duration, frame rate, frame size)
-    info = get_file_info(fpath, "video")
+    info = get_file_info(file, "video")
 
     # check the parameters
     offset = _hhmmss2sec(offset) if isinstance(offset, str) else offset
@@ -255,16 +260,20 @@ def load_video(
     filter_cmd = "-filter:v {}".format(",".join(filter_opt)) if filter_opt else ""
 
     # create the ffmpeg command
+    input_url = file if isinstance(file, str) else "pipe:0"
     command = (
         f"{avreader.path.FFMPEG_BIN} -loglevel fatal"
-        f" {offset_cmd} {duration_cmd} -i {fpath}"
+        f" {offset_cmd} {duration_cmd} -i {input_url}"
         f" -an -f image2pipe -codec:v rawvideo -pix_fmt {'gray' if grayscale else 'rgb24'}"
         f" {filter_cmd} pipe:1"
     )
 
     # run the command and check if the execution did not generate an error
     ffmpeg = subprocess.run(
-        command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        command.split(),
+        input=None if isinstance(file, str) else file,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
     if ffmpeg.returncode != 0:
         raise subprocess.CalledProcessError(
@@ -295,17 +304,17 @@ def load_video(
 
 
 def load(
-    fpath: str,
+    path: Union[bytes, str],
     offset: Union[float, str] = 0.0,
     duration: Union[float, str, None] = None,
     akwargs: Optional[dict] = None,
-    vkwargs: Optional[Dict] = None,
-) -> Tuple[Tuple[torch.Tensor, int], Tuple[torch.Tensor, int]]:
+    vkwargs: Optional[dict] = None,
+) -> Tuple[Tuple[Tensor, int], Tuple[Tensor, int]]:
     r"""Return audiovisual data, frame rate and sample rate.
 
     Parameters
     ----------
-    fpath : str
+    file : Union[bytes, str]
         Path to the input file.
     offset : Union[float, str], optional (default=0.0)
         Start reading after this time. Offset must be a time duration
@@ -341,7 +350,7 @@ def load(
         [description]
     """
 
-    audio, sample_rate = load_audio(fpath, offset=offset, duration=duration, **akwargs)
-    video, frame_rate = load_video(fpath, offset=offset, duration=duration, **vkwargs)
+    audio, sample_rate = load_audio(path, offset=offset, duration=duration, **akwargs)
+    video, frame_rate = load_video(path, offset=offset, duration=duration, **vkwargs)
 
-    return (audio, sample_rate), (video, frame_rate)
+    return ((audio, sample_rate), (video, frame_rate))

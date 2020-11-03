@@ -101,13 +101,13 @@ def _hhmmss2sec(time_duration: str) -> float:
 
 
 def get_file_info(
-    fpath: str, stream: str = "audio+video"
+    file: Union[bytes, str], stream: str = "audio+video"
 ) -> Dict[str, Union[float, Dict[str, float]]]:
     r"""Extract some information about the audiovisual file.
 
     Parameters
     ----------
-    fpath : str
+    file : Union[bytes, str]
         Path to the input file.
     stream : str, optional (default="audio+video")
         The stream on which we want to retrieve the information. The value can
@@ -150,24 +150,31 @@ def get_file_info(
         )
 
     # create the ffprobe command
+    input_url = file if isinstance(file, str) else "pipe:0"
     command = (
         f"{avreader.path.FFPROBE_BIN} -loglevel fatal"
         " -print_format compact=print_section=0 -show_entries"
         " stream=codec_type,duration,sample_rate,r_frame_rate,channels,width,height"
-        f" {fpath}"
+        f" -i {input_url}"
     )
 
     # run the command and check if the execution did not generate an error
     ffprobe = subprocess.run(
         command.split(),
+        input=None if isinstance(file, str) else file,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        encoding="utf-8",
     )
     if ffprobe.returncode != 0:
         raise subprocess.CalledProcessError(
-            f"FFprobe command exit with status {ffprobe.returncode}."
+            ffprobe.returncode,
+            " ".join(command.split()),
+            output=ffprobe.stdout,
+            stderr=ffprobe.stderr,
         )
+
+    # change the output encoding
+    output = ffprobe.stdout.decode("utf-8")
 
     # initialisation of the dictionary containing the information for each
     # stream concerning
@@ -178,7 +185,7 @@ def get_file_info(
     # read each line containing information about each of the streams
     # containing in the file (information of the form
     # key1=value1|key2=value2|key3=value3|...)
-    for out in ffprobe.stdout.splitlines():
+    for out in output.splitlines():
         out = {
             key: value for key, value in [data.split("=") for data in out.split("|")]
         }
